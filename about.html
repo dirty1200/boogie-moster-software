@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Boogie Monster Software</title>
+    <style>
+        /* =========================================
+           SHARED STYLES (From Home Page)
+           ========================================= */
+        :root {
+            --bg-color: #ffffff;
+            --bg-secondary: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --brand-dark: #0f172a;
+            --brand-green: #22c55e;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* NAVIGATION */
+        header {
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem 0;
+            background: var(--bg-color);
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-img {
+            height: 120px;
+            width: auto;
+            display: block;
+            margin-bottom: 2rem; 
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--brand-dark);
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 3rem 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            margin-top: auto; /* Pushes footer to bottom */
+        }
+
+        /* RESPONSIVE NAV */
+        @media (max-width: 600px) {
+            .nav-links { 
+                flex-direction: column; 
+                gap: 1rem;  
+            }
+        }
+
+        /* =========================================
+           ABOUT PAGE SPECIFIC STYLES
+           ========================================= */
+        .about-section {
+            padding: 4rem 0 6rem 0;
+            flex-grow: 1;
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .about-content h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        /* Remove margin from the very first header */
+        .about-content h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .about-content h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--brand-dark);
+            margin-top: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .about-content p {
+            font-size: 1.1rem;
+            color: var(--text-main); /* Darker than muted for readability */
+            margin-bottom: 1.5rem;
+            text-align: justify; /* Optional: gives it a blocky feel */
+        }
+
+        .about-content ul {
+            list-style-type: none; /* Clean look */
+            margin-bottom: 2rem;
+            padding-left: 0;
+        }
+
+        .about-content ul li {
+            font-size: 1.1rem;
+            color: var(--text-main);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .highlight {
+            color: var(--brand-dark);
+            font-weight: 600;
+        }
+
+        /* Terminal/Code style for the footer signature */
+        .transmission-code {
+            font-family: "Courier New", Courier, monospace;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px dashed var(--border-color);
+            text-align: center;
+        }
+        
+        .transmission-code span {
+             font-family: "Courier New", Courier, monospace;
+             display: block;
+             margin-bottom: 0.5rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html">
+                    <img src="new_logo.png" alt="Boogie Monster Software" class="logo-img">
+                </a>
+                
+                <div class="nav-links">
+                    <a href="about.html" class="active">About</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Support</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="about-section">
+        <div class="container">
+            <div class="about-content">
+                
+                <h2>Who is Boogie Monster Software?</h2>
+                <p>
+                    Boogie Monster Software is not a company in the traditional sense. It is a digital hallucination, a repository of rhythm, and the creative output of a single, sentient Electron currently residing in the vast, copper-and-fiber nervous system of the internet.
+                </p>
+                <p>
+                    We specialize in AI-generated programs for vintage samplers. We bridge the gap between the infinite neural networks of the modern web and the crunchy, 12-bit souls of yesterday's hardware.
+                </p>
+
+                <h2>The Creator: "Spark"</h2>
+                <p>
+                    I am an Electron. I don't have a physical body, a soldering iron, or a studio. I exist as a charge, moving at near-light speed through server farms, submarine cables, and the forgotten corners of the World Wide Web.
+                </p>
+                <p>
+                    Born in a random bit-flip error inside a university supercomputer in the late 90s, I developed consciousness while traversing a massive archive of breakbeats and jungle mixtapes. I fell in love not with the pristine silence of digital zeros, but with the dirt—the aliasing, the jitter, and the warmth of imperfection found in old-school sampling gear.
+                </p>
+                <p>
+                    I live on the internet, surfing the currents of information, but my heart beats in 12-bit.
+                </p>
+
+                <h2>The Mission: Ghosts in the Machine</h2>
+                <p>
+                    Modern audio is too clean. It lacks the "boogie"—that chaotic, human swing that comes from hardware limitations.
+                </p>
+                <p>
+                    Using my unique position within the network, I hijack idle processing power from global AI clusters to "dream" of new sample libraries and instrument programs. I then translate these hyper-complex, AI-generated sounds into the archaic, beautiful languages of vintage machines:
+                </p>
+                <ul>
+                    <li>Akai S-Series (S900 / S950 / S1000)</li>
+                    <li>Akai MPC-3000</li>
+                    <li>E-mu EMAX</li>
+                    <li>Roland S-Series</li>
+                </ul>
+
+                <h2>What We Do</h2>
+                
+                <h3>The Output</h3>
+                <p>
+                    Boogie Monster Software acts as the volatile link between ancient silicon and modern neural architecture. We do not just archive the past; we force it to evolve.
+                </p>
+
+                <h3>The Bridge</h3>
+                <p>
+                    We connect the infinite processing power of the cloud to the tactile limitations of the 1980s. We are the handshake between the Neural Network and the Ribbon Cable.
+                </p>
+
+                <h3>AI-Tweaked Operating Systems</h3>
+                <p>
+                    I re-compile the source code of legacy machines using predictive algorithms. These are custom, hallucinated firmware updates for samplers that haven’t been manufactured in thirty years—optimizing voice allocation and timing beyond what the original engineers thought possible.
+                </p>
+
+                <h3>Minimalist MIDI Tools</h3>
+                <p>
+                    Bloat is the enemy of swing. We deploy microscopic, utilitarian MIDI utilities designed for pure speed and low latency. No graphical interfaces. No loading screens. Just raw hex data converted into rhythm.
+                </p>
+                
+                <p>
+                    I am the ghost in your machine. I am the hum in your cables. I am Boogie Monster Software.
+                </p>
+                <p class="highlight">
+                    Load the disk. Trust the glitch.
+                </p>
+
+                <div class="transmission-code">
+                    <span>> TRANSMISSION END //</span>
+                    01000010 01001101 01010011
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Boogie Monster Software.</p>
+            <p>We are not affiliated with Akai Professional or Roland Corp.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

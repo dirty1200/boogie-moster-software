@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAV to W-30 Converter | Boogie Monster Software</title>
+    <style>
+        /* MODERN & CLEAN VARIABLES */
+        :root {
+            --bg-color: #ffffff;
+            --bg-secondary: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --brand-dark: #0f172a;
+            --brand-green: #22c55e;
+            --border-color: #e2e8f0;
+        }
+
+        /* RESET & BASE STYLES */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* NAVIGATION */
+        header {
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem 0;
+            background: var(--bg-color);
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-img {
+            height: 80px;
+            width: auto;
+            display: block;
+            margin-bottom: 1.5rem; 
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover {
+            color: var(--brand-dark);
+        }
+
+        /* PRODUCT CONTENT STYLES */
+        .product-page {
+            padding: 4rem 0;
+            flex-grow: 1;
+        }
+
+        .product-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .product-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+            margin-bottom: 1rem;
+        }
+
+        .product-header .lead {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 4rem;
+        }
+
+        .main-content h2 {
+            font-size: 1.5rem;
+            color: var(--brand-dark);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .main-content h3 {
+            font-size: 1.1rem;
+            color: var(--brand-dark);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .main-content ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .main-content li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .main-content li::before {
+            content: "•";
+            color: var(--brand-green);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+            line-height: 1.5rem;
+        }
+
+        /* SIDEBAR / METADATA */
+        .sidebar-box {
+            background-color: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            position: sticky;
+            top: 2rem;
+        }
+
+        .sidebar-box h3 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background-color: var(--brand-dark);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .download-btn:hover {
+            background-color: #334155;
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 3rem 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .sidebar-box {
+                position: static;
+                order: -1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html">
+                    <img src="new_logo.png" alt="Boogie Monster Software" class="logo-img">
+                </a>
+                
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Support</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="product-page">
+        <div class="container">
+            
+            <div class="product-header">
+                <h1>WAV to W-30 Converter</h1>
+                <p class="lead">A GUI application that converts WAV files into the Roland W-30 sampler disk format for use on real W-30 hardware.</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="main-content">
+                    
+                    <h2>Main Features</h2>
+
+                    <h3>Convert WAV Files to W-30 Format</h3>
+                    <ul>
+                        <li>Converts standard WAV files to W-30's 12-bit format (2 samples per 3 bytes)</li>
+                        <li>Supports 15kHz and 30kHz sample rates</li>
+                        <li>Audio processing with SoX (anti-aliasing, filtering, normalization)</li>
+                        <li>Multiple audio presets (drums, vocals, bass, pads, keys, FX, 90s styles, etc.)</li>
+                        <li>Optional DC offset removal</li>
+                        <li>Loop modes (forward, alternate, reverse, one-shot)</li>
+                    </ul>
+
+                    <h3>Disk Image Management</h3>
+                    <ul>
+                        <li>Create blank W-30 disk images (720KB floppy format)</li>
+                        <li>Open and edit existing W-30 disk images</li>
+                        <li>Save modified disk images</li>
+                    </ul>
+
+                    <h3>Tone Management</h3>
+                    <ul>
+                        <li>View all tones/samples on a disk (tone directory)</li>
+                        <li>Add new tones by converting WAV files</li>
+                        <li>Remove tones from disks</li>
+                        <li>See tone information (name, duration, sample rate, RAM bank, end points)</li>
+                    </ul>
+
+                    <h3>Disk Analysis</h3>
+                    <ul>
+                        <li>Scan disk contents and list all tones</li>
+                        <li>View disk memo/label information</li>
+                        <li>Comprehensive disk analysis</li>
+                        <li>Fix tone endpoint issues (corrects playback glitches)</li>
+                    </ul>
+
+                    <h3>Audio Processing Features</h3>
+                    <ul>
+                        <li>Multiple effect presets optimized for different sounds</li>
+                        <li>Normalization (with headroom to prevent clipping)</li>
+                        <li>Anti-aliasing filters for clean downsampling</li>
+                        <li>High-pass and low-pass filtering</li>
+                        <li>Treble/gain adjustments</li>
+                        <li>Compression and Dithering for 12-bit conversion</li>
+                    </ul>
+
+                    <h3>Batch Conversion</h3>
+                    <ul>
+                        <li>Convert multiple WAV files in sequence</li>
+                        <li>Queue files for batch processing</li>
+                    </ul>
+
+                    <h2>Technical Details</h2>
+                    <ul>
+                        <li><strong>Format:</strong> 720KB floppy disk image (2 sides, 80 tracks, 9 sectors/track, 512 bytes/sector)</li>
+                        <li><strong>Sample Format:</strong> 12-bit (2 samples per 3 bytes)</li>
+                        <li><strong>Sample Rates:</strong> 15kHz (lower quality, longer duration) or 30kHz (higher quality, shorter duration)</li>
+                        <li><strong>Tone Slots:</strong> Up to 32 tones per disk</li>
+                        <li><strong>RAM Banks:</strong> Two banks (Bank A and Bank B), 18 blocks each</li>
+                    </ul>
+
+                    <h2>Use Case</h2>
+                    <p style="margin-bottom: 1rem;">Useful if you own a Roland W-30 sampler and want to:</p>
+                    <ul>
+                        <li>Load modern WAV samples into the W-30</li>
+                        <li>Create custom sample libraries for the W-30</li>
+                        <li>Organize and manage samples on W-30 disk images</li>
+                        <li>Fix issues on existing W-30 disks</li>
+                    </ul>
+
+                    <p style="color: var(--text-muted); font-style: italic; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                        The app makes it easier to use the W-30 with modern audio workflows by converting standard audio files into the W-30's proprietary format.
+                    </p>
+
+                </div>
+
+                <aside>
+                    <div class="sidebar-box">
+                        <h3>Get Converter</h3>
+                        <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
+                            Version 1.0 <br>
+                            <strong>OSX INTEL</strong>
+                        </p>
+                        <a href="https://mega.nz/file/8zQkkY5C#DiMK2y9RZRgrMjr8obOAsS5PLZYDK863hSe7_BIrxV4" class="download-btn" target="_blank" rel="noopener noreferrer">Download Now</a>
+                    </div>
+                </aside>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Boogie Monster Software.</p>
+            <p>We are not affiliated with Akai Professional or Roland Corp.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
