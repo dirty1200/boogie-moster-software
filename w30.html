@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roland W-30 OS Modernization Suite | Boogie Monster Software</title>
+    <meta name="description" content="Dedicated Custom Operating Systems for the Roland W-30 (1989): W30_PURE_SAMPLER (Dedicated Pure Sampler Workstation) and W30SYS_SEQ (MPC Continuous Loop-Overdub Workstation). Instant boot, real-time TVF cutoff filter sweeps, 1-voice mono choke, and 12-bit wave DSP.">
+    <style>
+        /* =========================================
+           BOOGIE MONSTER SOFTWARE - ANALOG HARDWARE THEME
+           ========================================= */
+        :root {
+            --bg-color: #f4f4f0; 
+            --bg-secondary: #e8e8e3; 
+            --text-main: #2b2b2b; 
+            --text-muted: #6b6b6b;
+            --brand-dark: #111111;
+            --brand-accent: #d9381e; /* Roland Industrial Orange-Red */
+            --border-color: #d1d1cd;
+            --font-mono: "ui-monospace", "SFMono-Regular", "IBM Plex Mono", "Courier New", monospace;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            line-height: 1.7;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* CSS-ONLY NOISE GRAIN FOR ANALOG TEXTURE */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* NAVIGATION & HEADER */
+        header {
+            border-bottom: 2px solid var(--brand-dark);
+            padding: 2.5rem 0;
+            background: var(--bg-color);
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-img {
+            height: 110px; 
+            width: auto;
+            display: block;
+            margin-bottom: 2.5rem; 
+            filter: contrast(1.1) brightness(0.95);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding-bottom: 4px;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--brand-dark);
+            border-bottom: 2px solid var(--brand-accent);
+        }
+
+        /* HERO & PAGE HEADER */
+        .product-page {
+            padding: 4rem 0 6rem 0;
+            flex-grow: 1;
+        }
+
+        .product-header {
+            text-align: left; 
+            margin-bottom: 3.5rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 2rem;
+        }
+
+        .product-header .tagline {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--brand-accent);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-header h1 {
+            font-size: 3.1rem;
+            font-weight: 900;
+            color: var(--brand-dark);
+            margin-bottom: 1rem;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+            text-transform: uppercase;
+        }
+
+        .product-header .lead {
+            font-family: var(--font-mono);
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 920px;
+            line-height: 1.6;
+        }
+
+        /* DUAL EDITION SPOTLIGHT CARDS */
+        .edition-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2.5rem 0 4rem 0;
+        }
+
+        .edition-card {
+            background: var(--bg-color);
+            border: 2px solid var(--brand-dark);
+            padding: 2rem;
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+        }
+
+        .edition-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.1);
+        }
+
+        .edition-card.featured {
+            border-top: 6px solid var(--brand-accent);
+        }
+
+        .edition-card.sequencer {
+            border-top: 6px solid var(--brand-dark);
+        }
+
+        .edition-card h3 {
+            font-family: var(--font-mono);
+            font-size: 1.35rem;
+            text-transform: uppercase;
+            color: var(--brand-dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .edition-tag {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--brand-accent);
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .edition-card p {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+        }
+
+        .edition-card ul {
+            list-style: none;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            font-family: var(--font-mono);
+        }
+
+        .edition-card ul li::before {
+            content: "→ ";
+            color: var(--brand-accent);
+            font-weight: bold;
+        }
+
+        /* GRID LAYOUT FOR MAIN CONTENT & SIDEBAR */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .main-content h2 {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+            margin: 3.5rem 0 1.25rem 0;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .main-content h3 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--brand-dark);
+            margin: 2rem 0 0.75rem 0;
+            text-transform: uppercase;
+        }
+
+        .main-content p {
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+            font-size: 1.05rem;
+        }
+
+        .main-content ul {
+            margin: 1.25rem 0 2rem 1.5rem;
+            line-height: 1.9;
+        }
+
+        .main-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* FEATURE CARDS */
+        .feature-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--brand-accent);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.04);
+            transition: all 0.2s ease;
+        }
+
+        .feature-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.1);
+        }
+
+        .feature-card h4 {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            color: var(--brand-dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .feature-card p {
+            margin-bottom: 0;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        /* HARDWARE LCD DISPLAY SIMULATION */
+        .lcd-preview {
+            font-family: var(--font-mono);
+            background: #758c7f;
+            color: #11261b;
+            padding: 1.25rem;
+            border: 2px solid var(--brand-dark);
+            border-radius: 2px;
+            box-shadow: inset 3px 3px 6px rgba(0,0,0,0.35);
+            letter-spacing: 1.5px;
+            line-height: 1.6;
+            font-weight: 700;
+            margin: 1.5rem 0 2rem 0;
+            text-transform: uppercase;
+            white-space: pre-wrap;
+        }
+
+        .code-block {
+            font-family: var(--font-mono);
+            background: var(--brand-dark);
+            color: #f0f0f0;
+            padding: 1.25rem 1.5rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            border-left: 5px solid var(--brand-accent);
+            margin: 1.75rem 0;
+            overflow-x: auto;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.05);
+        }
+
+        /* TABLES */
+        .hardware-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0 2.5rem 0;
+            font-size: 0.95rem;
+            border: 2px solid var(--brand-dark);
+            background: var(--bg-color);
+        }
+
+        .hardware-table th, .hardware-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .hardware-table th {
+            background-color: var(--brand-dark);
+            color: #fff;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+        }
+
+        .hardware-table tr:nth-child(even) {
+            background-color: var(--bg-secondary);
+        }
+
+        .hardware-table tr:hover {
+            background-color: var(--border-color);
+        }
+
+        /* BADGES */
+        .badge {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            text-transform: uppercase;
+            border: 1px solid var(--brand-dark);
+            background: var(--bg-color);
+            color: var(--brand-dark);
+            letter-spacing: 1px;
+        }
+
+        .badge.accent {
+            background: var(--brand-accent);
+            color: #fff;
+            border-color: var(--brand-dark);
+        }
+
+        .badge.new {
+            background: var(--brand-dark);
+            color: #fff;
+            border-color: var(--brand-dark);
+        }
+
+        /* IMAGE FRAMES */
+        .img-frame {
+            border: 2px solid var(--brand-dark);
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.07);
+            margin: 2rem 0 2.5rem 0;
+            background: var(--bg-secondary);
+            padding: 10px;
+        }
+
+        .img-frame img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border: 1px solid var(--border-color);
+        }
+
+        .img-caption {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        /* SIDEBAR / DOWNLOADS BOX */
+        .sidebar-box {
+            background-color: var(--bg-secondary);
+            padding: 2rem;
+            border: 2px solid var(--brand-dark);
+            position: sticky;
+            top: 2rem;
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.06);
+            margin-bottom: 2.5rem;
+        }
+
+        .sidebar-box h3 {
+            font-family: var(--font-mono);
+            margin-bottom: 1.5rem;
+            font-size: 1.15rem;
+            text-transform: uppercase;
+            color: var(--brand-dark);
+            border-bottom: 2px dashed var(--border-color);
+            padding-bottom: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-meta {
+            font-family: var(--font-mono);
+            margin-bottom: 1.75rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 2;
+            text-transform: uppercase;
+        }
+
+        .sidebar-meta strong {
+            color: var(--brand-dark);
+        }
+
+        .download-btn {
+            display: block;
+            background-color: var(--brand-accent);
+            color: #fff;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            text-align: center;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border: 2px solid var(--brand-dark);
+            transition: all 0.2s ease;
+            box-shadow: 4px 4px 0px var(--brand-dark);
+            margin-bottom: 0.85rem;
+            font-size: 0.88rem;
+        }
+
+        .download-btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--brand-dark);
+            background-color: var(--brand-accent);
+        }
+
+        .download-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px var(--brand-dark);
+        }
+
+        .download-btn.secondary {
+            background-color: var(--brand-dark);
+            color: #fff;
+        }
+
+        .download-btn.secondary:hover {
+            background-color: #2b2b2b;
+        }
+
+        .download-btn.outline {
+            background-color: transparent;
+            color: var(--brand-dark);
+        }
+
+        .download-btn.outline:hover {
+            background-color: var(--border-color);
+        }
+
+        .audit-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--brand-dark);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 1rem;
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--brand-dark);
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 3.5rem 0;
+            text-align: center;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 2px solid var(--brand-dark);
+            background-color: var(--bg-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: auto;
+        }
+
+        footer p { margin-bottom: 0.5rem; }
+
+        @media (max-width: 900px) {
+            .edition-grid { grid-template-columns: 1fr; }
+            .content-grid { grid-template-columns: 1fr; gap: 3rem; }
+            .sidebar-box { position: static; order: -1; }
+            .product-header h1 { font-size: 2.3rem; }
+            .nav-links { gap: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html">
+                    <img src="new_logo.png" alt="Roland W-30 OS 2.0 Upgrade" class="logo-img">
+                </a>
+                
+                <div class="nav-links">
+                    <a href="index.html" class="active">Home</a>
+                    <a href="#pure-sampler">Pure Sampler</a>
+                    <a href="#sequencer">Sequencer Edition</a>
+                    <a href="#sound-engine">Sound Engine</a>
+                    <a href="#dsp">DSP Suite</a>
+                    <a href="#downloads">Downloads</a>
+                    <a href="downloads/Roland_W30_OS_Ver2_Master_User_Manual.pdf" target="_blank" rel="noopener noreferrer">Manual (PDF)</a>
+                    <a href="about.html">About</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="product-page">
+        <div class="container">
+            
+            <div class="product-header">
+                <div class="tagline">// Roland W-30 Custom Operating System // Version 2.00 Suite</div>
+                <h1>Roland W-30 Firmware Suite</h1>
+                <p class="lead">> Two dedicated high-performance operating systems engineered for the 1989 Roland W-30 sampling workstation: W30_PURE_SAMPLER (Dedicated Pure Sampler) and W30SYS_SEQ (MPC Continuous Sequencer). Sound engine uncaged.</p>
+            </div>
+
+            <!-- DUAL EDITION SPOTLIGHT -->
+            <div class="edition-grid">
+                
+                <!-- CARD 1: PURE SAMPLER -->
+                <div class="edition-card featured" id="card-pure">
+                    <div>
+                        <div class="edition-tag">// Flagship Pure Sampler Firmware</div>
+                        <h3>W30_PURE_SAMPLER <span class="badge accent">Ver. 2.00</span></h3>
+                        <p>Transforms the W-30 into a dedicated, instant-boot, 12-bit hardware sampler powerhouse. The sluggish sequencer is stripped away, freeing CPU cycles for the audio engine.</p>
+                        <ul>
+                            <li>Instant Boot directly to Part Set (&lt; 3 sec)</li>
+                            <li>Sequencer Clocks & Watchdogs 100% Neutralized</li>
+                            <li>6 Physical Transport Buttons Mapped to Sampler Commands</li>
+                            <li>Real-Time Mod Wheel TVF Filter Cutoff Sweeps</li>
+                            <li>True 1-Voice 'Mono' Key Mode & Choke Groups</li>
+                            <li>5-Key Wave DSP Suite (Truncate, Normalize, 30→15k, SP-1200, Snap 0)</li>
+                            <li>Graphic Waveform Edit Unlock on [F5]</li>
+                            <li>100% Full Loud Unattenuated Master Volume (0x7F)</li>
+                            <li>Floppy Maintenance Softkeys on Sound Disk Menu</li>
+                        </ul>
+                    </div>
+                    <a href="#pure-sampler" class="download-btn">Explore Pure Sampler</a>
+                </div>
+
+                <!-- CARD 2: SEQUENCER EDITION -->
+                <div class="edition-card sequencer" id="card-seq">
+                    <div>
+                        <div class="edition-tag">// MPC Continuous Sequencer Firmware</div>
+                        <h3>W30SYS_SEQ <span class="badge new">Ver. 2.00</span></h3>
+                        <p>Retains the onboard 16-track MIDI sequencer and supercharges it with continuous loop overdubbing, Akai MPC3000 swing groove presets, and non-muting loop wraps.</p>
+                        <ul>
+                            <li>MPC-Style Continuous Loop-Overdub Recording</li>
+                            <li>Akai MPC3000 Per-Track & ALL Grooves (50% to 75% Swing)</li>
+                            <li>Clean Non-Muting Looper with Continuous Reverb/Decay Wrap</li>
+                            <li>Real-Time Mod Wheel TVF Filter Cutoff Sweeps</li>
+                            <li>True 1-Voice 'Mono' Key Mode & Choke Groups</li>
+                            <li>5-Key Wave DSP Suite (Truncate, Normalize, 30→15k, SP-1200, Snap 0)</li>
+                            <li>Graphic Waveform Edit Unlock on [F5]</li>
+                            <li>100% Full Loud Unattenuated Master Volume (0x7F)</li>
+                            <li>Floppy Maintenance Softkeys on Sound Disk Menu</li>
+                        </ul>
+                    </div>
+                    <a href="#sequencer" class="download-btn secondary">Explore Sequencer Edition</a>
+                </div>
+
+            </div>
+
+            <div class="content-grid">
+                
+                <!-- MAIN CONTENT COLUMN -->
+                <div class="main-content">
+
+                    <div class="img-frame">
+                        <img src="images/os_logo.png" alt="Roland W-30 OS 2.0 Floppy Upgrade Logo">
+                        <div class="img-caption">Roland W-30 OS 2.0 Floppy Upgrade Logo — Dedicated 12-Bit Sound Engine</div>
+                    </div>
+
+                    <!-- PURE SAMPLER SECTION -->
+                    <h2 id="pure-sampler">Edition 1: W30_PURE_SAMPLER (Pure Sampler Edition)</h2>
+                    <p>The 1989 Roland W-30 features one of the most musical and punchy 12-bit differential DAC sound engines ever manufactured, coupled with a genuine 24 dB/octave analog-style digital TVF filter. However, in factory stock firmware, the instrument was weighed down by a sluggish 16-track MIDI sequencer, slow multi-stage booting, and buried menus.</p>
+                    <p><strong>W30_PURE_SAMPLER</strong> strips away 100% of the sequencer overhead, permanently disarms background clock interrupt handlers, and repurposes all physical front-panel controls to build the ultimate dedicated 12-bit sampling keyboard.</p>
+
+                    <div class="lcd-preview">
++--------------------------------------------------+
+| W-30 Pure Sampler   Ver. 2.00   [ -- ] 18-OCT-26 |
+|   Dedicated Sampler Workstation                  |
+| Screen [32. Part Set]                  VOICES:16 |
++--------------------------------------------------+</div>
+
+                    <ul>
+                        <li><strong>Direct Instant Boot to Part Set (Screen 32):</strong> Boots directly to your multi-timbral performance screen in under 3 seconds.</li>
+                        <li><strong>Complete Clock Neutralization:</strong> Hardware HSO #3A sequencer clock, 96 PPQN sub-tick accumulator, and 20ms tempo watchdog ISRs permanently disarmed with RET/NOP, freeing MCU CPU cycles for the audio engine.</li>
+                        <li><strong>Clean LCD Interface:</strong> All 27 obsolete sequencer screens replaced with clean locked Part Set redirects; top-right LCD Sequencer STOP badge replaced with <code>[ -- ]</code>.</li>
+                        <li><strong>F1–F5 Sampler Quick-Jumps:</strong> Boot registered jump table pre-mapped to essential sampler pages: <code>[32. Part Set, 36. Patch PRM, 41. Tone PRM, 57. Truncate, 62. Sampling]</code>.</li>
+                    </ul>
+
+                    <h3>Physical Front-Panel Transport Shortcuts</h3>
+                    <p>The 6 obsolete tape-recorder sequencer buttons on the front panel have been repurposed into instant, zero-menu sampler commands:</p>
+
+                    <table class="hardware-table">
+                        <thead>
+                            <tr>
+                                <th>Physical Button</th>
+                                <th>New Action in W30_PURE_SAMPLER</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>[START/STOP]</code></td>
+                                <td><strong>Audition Waveform</strong></td>
+                                <td>Silences active voices and triggers Note-On C4 (Velocity 100) on active Tone.</td>
+                            </tr>
+                            <tr>
+                                <td><code>[REC]</code></td>
+                                <td><strong>1-Click Sampling Jump</strong></td>
+                                <td>Instant jump to <code>[62. Sampling]</code> (Screen 0x400B).</td>
+                            </tr>
+                            <tr>
+                                <td><code>[ < ] (Rewind)</code></td>
+                                <td><strong>Filter Page Toggle</strong></td>
+                                <td>Toggles between <code>[44. Filter Page 1]</code> (Cutoff/Res) and <code>[45. Filter Page 2]</code> (TVF Env).</td>
+                            </tr>
+                            <tr>
+                                <td><code>[ > ] (Fast Fwd)</code></td>
+                                <td><strong>Amp Envelope Toggle</strong></td>
+                                <td>Toggles between <code>[46. AmpEnv Page 1]</code> (Level/Vel) and <code>[47. AmpEnv Page 2]</code> (TVA Env).</td>
+                            </tr>
+                            <tr>
+                                <td><code>[ |< ] (Locate Jump)</code></td>
+                                <td><strong>MIDI Panic / Voice Kill</strong></td>
+                                <td>Instant emergency silence across all 16 voices with zero audio artifacts.</td>
+                            </tr>
+                            <tr>
+                                <td><code>[ >| ] (Locate Jump)</code></td>
+                                <td><strong>Wave Edit Menu Jump</strong></td>
+                                <td>Instant jump to <code>[55. Wave Edit Menu]</code> (Screen 0x0029).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- SOUND ENGINE ARCHITECTURE -->
+                    <h2 id="sound-engine">Sound Engine Architecture & Expressive TVF Control</h2>
+
+                    <div class="feature-card">
+                        <h4>Real-Time Mod Wheel &rarr; Digital TVF Cutoff Sweep <span class="badge accent">Expressive</span></h4>
+                        <p>Push the physical bender/modulation lever forward, or send MIDI CC #1 / EV-5 expression pedal to sweep the low-pass filter cutoff frequency in real time. Switchable in <strong>[38. System Config 2]</strong> (<code>Mod Wheel -> Cutoff: Off / On</code>). When Cutoff mode is active, pitch vibrato is automatically suppressed for clean, analog-style filter sweeps.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>True 1-Voice 'Mono' Key Mode & Choke Groups <span class="badge accent">Hip-Hop / Bass</span></h4>
+                        <p>Reprograms Bank 1 key mode table to provide genuine 1-voice monophonic voice allocation. Setting Key Mode to <strong>'Mono'</strong> on <code>[36. Patch Parameter]</code> guarantees strict single-voice choking for 808 glide bass, lead synths, and classic monophonic open/closed hi-hat choke groups.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>Full Loud Master Volume (100% Unattenuated SNR) <span class="badge">Fixed</span></h4>
+                        <p>Restores Boot 0x51AE master volume controller to 100% virgin stock. Sound engine register <code>65D5[00]</code> outputs full unattenuated volume (127), permanently fixing output attenuation and digital distortion bugs.</p>
+                    </div>
+
+                    <!-- SEQUENCER EDITION SECTION -->
+                    <h2 id="sequencer">Edition 2: W30SYS_SEQ (MPC Continuous Sequencer Edition)</h2>
+                    <p>For artists who create songs and arrangements directly on the hardware keyboard, <strong>W30SYS_SEQ</strong> keeps the classic 16-track MIDI sequencer intact while infusing it with modern MPC-style continuous loop workflow.</p>
+
+                    <div class="lcd-preview">
++--------------------------------------------------+
+| W-30 MPC-Seq Edition Ver. 2.00  [STOP] 01-NOV-26 |
+|   Continuous Loop-Overdub OS                     |
+| Screen [01. Song Play / Loop]          VOICES:16 |
++--------------------------------------------------+</div>
+
+                    <ul>
+                        <li><strong>MPC-Style Continuous Loop Recording:</strong> Never drops out of record mode at loop boundaries. Seamlessly punch in and stack notes over bars without stopping playback.</li>
+                        <li><strong>Akai MPC3000 Real-Time Grooves:</strong> 9-preset swing groove engine on Song Edit [F5] (50% straight to 75% heavy swing, plus Roger Linn 58% pocket on input quantize).</li>
+                        <li><strong>Clean Non-Muting Looper:</strong> Mode 0 wrap bypasses voice-kill and mute routines, letting sustained notes, cymbal decays, and reverb tails ring out across loop boundaries.</li>
+                        <li><strong>Integrated Sound Engine Upgrades:</strong> Features Real-Time Mod Wheel TVF Cutoff Sweeps, True 1-Voice 'Mono' Choke, 100% Full Loud Volume, and the 5-Key Wave DSP Workstation.</li>
+                    </ul>
+
+                    <!-- WAVE DSP SUITE -->
+                    <h2 id="dsp">Integrated 5-Key Wave DSP Suite</h2>
+                    <p>Integrated directly into the W-30's <code>[57. Truncate]</code> screen (overlay <code>ovl_trunc.bin</code>), offering a full 5-key DSP workstation on the function softkeys across both editions:</p>
+
+                    <div class="img-frame">
+                        <img src="images/Roland_W30_New_Features_Showcase.jpg" alt="W-30 Wave DSP Suite Showcase">
+                        <div class="img-caption">5-Key Wave DSP Suite Integrated on Function Buttons [F1] through [F5]</div>
+                    </div>
+
+                    <ul>
+                        <li><strong>[F1] Truncate:</strong> Crops sample to Start and End markers. Features the End-Fade De-Click fix to eliminate loop clicking.</li>
+                        <li><strong>[F2] Normalize:</strong> 12-Bit Peak Wave Normalizer with floating bus and -32768 rail anti-clip guard. Automatically maximizes dynamic range while targeting -1.8 dBFS headroom for resonant filter sweeps.</li>
+                        <li><strong>[F3] 30&rarr;15k Decimator:</strong> In-place downsampler using a 2-tap FIR moving average. Instantly frees up 50% of the sample's Wave RAM blocks for longer sampling times.</li>
+                        <li><strong>[F4] SP-1200 Lo-Fi Bitcrusher:</strong> 9-bit truncation combined with a 2:1 sample-and-hold decimator. Delivers vintage 1980s hip-hop crunch, gritty aliasing, and punchy transients.</li>
+                        <li><strong>[F5] Snap 0 (Auto Zero-Crossing):</strong> Automatically detects and snaps Start, End, and Loop points to the nearest zero-crossing sample, eliminating pops and clicks.</li>
+                    </ul>
+
+                    <h2>Graphic Waveform Unlock on [F5]</h2>
+                    <p>Pressing <strong>[F5]</strong> on Tone/Wave edit screens now unlocks graphical Start, Loop, and End point scrolling directly on the visual LCD waveform display with full value dial redraw synchronization.</p>
+
+                    <h2>Sound Disk Maintenance Softkeys</h2>
+                    <p>Restores <strong>FD Format</strong> and <strong>FD Copy</strong> softkeys directly to the Sound Disk menu so you can format new 720KB disks and duplicate sounds without needing a separate utility floppy disk.</p>
+
+                    <h2>Comparison: Stock OS vs W30_PURE_SAMPLER vs W30SYS_SEQ</h2>
+                    <table class="hardware-table">
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Stock OS (1989)</th>
+                                <th>W30_PURE_SAMPLER</th>
+                                <th>W30SYS_SEQ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Boot Target</strong></td>
+                                <td>Song Track 1 (slow)</td>
+                                <td><strong>[32. Part Set] (&lt; 3 sec)</strong></td>
+                                <td>[01. Song Play]</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sequencer Clocks</strong></td>
+                                <td>Active in background</td>
+                                <td><strong>100% Neutralized (RET)</strong></td>
+                                <td>Continuous Loop Enhanced</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mod Wheel Cutoff</strong></td>
+                                <td>Vibrato only</td>
+                                <td><strong>Real-Time TVF Sweep</strong></td>
+                                <td><strong>Real-Time TVF Sweep</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>1-Voice Choke Mode</strong></td>
+                                <td>Stacked 2-voice detune</td>
+                                <td><strong>Mono (1-voice choke)</strong></td>
+                                <td><strong>Mono (1-voice choke)</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Transport Buttons</strong></td>
+                                <td>Tape play/stop/rec</td>
+                                <td><strong>Audition, Sampling, Panic</strong></td>
+                                <td>Continuous Loop-Overdub</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Wave DSP Tools</strong></td>
+                                <td>Truncate only</td>
+                                <td><strong>Normalize, 15k, SP, Snap</strong></td>
+                                <td><strong>Normalize, 15k, SP, Snap</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Master Volume</strong></td>
+                                <td>Digital attenuation bug</td>
+                                <td><strong>100% Full Loud (0x7F)</strong></td>
+                                <td><strong>100% Full Loud (0x7F)</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h2>Installation & Gotek Floppy Guide</h2>
+                    <p>Both operating systems are distributed as standard 720KB 2DD floppy disk images (737,280 bytes, 80 tracks, 2 sides, 9 sectors/track, 512 bytes/sector).</p>
+                    
+                    <h3>Writing to Physical 3.5" 2DD Floppy Disk</h3>
+                    <ul>
+                        <li>Use genuine 720KB 2DD disks (or high-density 1.44MB HD disks with the density notch taped over).</li>
+                        <li><strong>Windows:</strong> Write using Omniflop or RawWrite.</li>
+                        <li><strong>macOS / Linux:</strong> Write using <code>dd</code> with an external USB floppy drive:
+                            <div class="code-block">sudo dd if=W30_PURE_SAMPLER.W30 of=/dev/rdiskX bs=512</div>
+                        </li>
+                    </ul>
+
+                    <h3>Using with Gotek USB Floppy Emulator</h3>
+                    <ul>
+                        <li>Flash your Gotek drive with modern <strong>FlashFloppy</strong> firmware.</li>
+                        <li>Extract your chosen <code>.W30</code> file from the ZIP archive and copy directly onto the root of your USB flash drive.</li>
+                        <li>Configure your <code>IMG.CFG</code> file with standard Roland 720KB disk geometry:
+                            <div class="code-block">[::737280]
+cyls = 80
+heads = 2
+secs = 9
+bps = 512
+gap3 = 84</div>
+                        </li>
+                    </ul>
+
+                    <p style="font-family: var(--font-mono); font-size: 0.95rem; color: var(--text-muted); border-top: 1px dashed var(--border-color); padding-top: 1.5rem; margin-top: 3.5rem;">
+                        // NOTE: Both custom firmware editions preserve 100% backward compatibility with all original Roland Sound Disks (SN-W30 series), S-50/S-330/S-550 floppy libraries, and custom user sample disks.
+                    </p>
+
+                </div>
+
+                <!-- SIDEBAR DOWNLOADS COLUMN -->
+                <aside id="downloads">
+                    
+                    <!-- PURE SAMPLER BOX -->
+                    <div class="sidebar-box">
+                        <h3>Pure Sampler Edition</h3>
+                        <div class="sidebar-meta">
+                            Product: <strong>W30_PURE_SAMPLER</strong><br>
+                            Version: <strong>Ver. 2.00 (Pure Sampler)</strong><br>
+                            Package: <strong>ZIP Archive (.W30)</strong><br>
+                            Disk Size: <strong>737,280 Bytes</strong><br>
+                            Compatibility: <strong>Roland W-30 / Gotek</strong>
+                        </div>
+
+                        <a href="downloads/W30_PURE_SAMPLER.zip" class="download-btn" download>Download W30_PURE_SAMPLER.zip</a>
+
+                        <div class="audit-badge">
+                            &check; 22/22 Exhaustive Audit Pass
+                        </div>
+
+                        <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); margin-top: 1.5rem; line-height: 1.7; word-break: break-all;">
+                            <strong>SHA-256 (ZIP Archive):</strong><br>
+                            <code style="color: var(--brand-dark); font-size: 0.72rem;">57f18a45342def65685cd1ff39195f404361efeb34f614648604afcaa97aa381</code><br><br>
+                            <strong>SHA-256 (Unpacked .W30):</strong><br>
+                            <code style="color: var(--brand-dark); font-size: 0.72rem;">39e0d353c71b937404e21adfe09d10bab042462c3d4cd65826cb035fcd382a26</code>
+                        </div>
+                    </div>
+
+                    <!-- SEQUENCER EDITION BOX -->
+                    <div class="sidebar-box">
+                        <h3>Sequencer Edition</h3>
+                        <div class="sidebar-meta">
+                            Product: <strong>W30SYS_SEQ</strong><br>
+                            Version: <strong>Ver. 2.00 (MPC Sequencer)</strong><br>
+                            Package: <strong>ZIP Archive (.W30)</strong><br>
+                            Disk Size: <strong>737,280 Bytes</strong><br>
+                            Compatibility: <strong>Roland W-30 / Gotek</strong>
+                        </div>
+
+                        <a href="downloads/W30SYS_SEQ.zip" class="download-btn secondary" download>Download W30SYS_SEQ.zip</a>
+
+                        <div class="audit-badge">
+                            &check; 22/22 Exhaustive Audit Pass
+                        </div>
+
+                        <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); margin-top: 1.5rem; line-height: 1.7; word-break: break-all;">
+                            <strong>SHA-256 (ZIP Archive):</strong><br>
+                            <code style="color: var(--brand-dark); font-size: 0.72rem;">fd23d6f8facbaeaa5793b44b0c9d4c17b7b40c7576846acd773e4053066c4236</code><br><br>
+                            <strong>SHA-256 (Unpacked .W30):</strong><br>
+                            <code style="color: var(--brand-dark); font-size: 0.72rem;">8ddbd4c737e473d30382e4960ea6171586ad31b6b53f10c7f2e3f8cc6859b543</code>
+                        </div>
+                    </div>
+
+                    <!-- DOCUMENTATION BOX -->
+                    <div class="sidebar-box">
+                        <h3>Master User Manual</h3>
+                        <div class="sidebar-meta">
+                            Complete 12-page hardware and operating system reference guide covering both firmware editions:
+                        </div>
+                        <a href="downloads/Roland_W30_OS_Ver2_Master_User_Manual.pdf" class="download-btn outline" target="_blank" rel="noopener noreferrer">Master User Manual (PDF)</a>
+                    </div>
+
+                </aside>
+
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Boogie Monster Software. All rights reserved.</p>
+            <p>Designed for vintage sampler preservation. We are not affiliated with Roland Corp.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
